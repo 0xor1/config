@@ -120,6 +120,17 @@ func (c *config) GetTime(path string) time.Time {
 	}
 }
 
+func (c *config) GetDuration(path string) time.Duration {
+	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
+		return json.PFromString(envVal).Duration()
+	} else {
+		if val, err := c.fileValues.Json.Duration(jsonPath...); err == nil {
+			return val
+		}
+		return c.defaults.Duration(jsonPath...)
+	}
+}
+
 func makeJsonPathAndGetEnvValAndExists(path, envVarsStringSeparator string) ([]interface{}, string, bool) {
 	parts := strings.Split(path, ".")
 	envName := ""
