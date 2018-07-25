@@ -1,15 +1,15 @@
 package config
 
-import(
+import (
 	"github.com/0xor1/json"
 	"os"
 	"strings"
 	"time"
 )
 
-type config struct{
-	defaults              *json.PJson
-	fileValues            *json.PJson
+type config struct {
+	defaults               *json.Json
+	fileValues             *json.Json
 	envVarsStringSeparator string
 }
 
@@ -17,12 +17,12 @@ type config struct{
 //pass in empty file path to not use a config file, pass in an empty envVarSeparator to ignore environment variables
 func New(file string, envVarSeparator string) *config {
 	ret := &config{
-		defaults: json.PNew(),
-		fileValues: json.PNew(),
+		defaults:               json.MustNew(),
+		fileValues:             json.MustNew(),
 		envVarsStringSeparator: envVarSeparator,
 	}
 	if file != "" {
-		ret.fileValues = json.PFromFile(file)
+		ret.fileValues = json.MustFromFile(file)
 	}
 	return ret
 }
@@ -36,98 +36,98 @@ func (c *config) GetString(path string) string {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
 		return envVal
 	} else {
-		if val, err := c.fileValues.Json.String(jsonPath...); err == nil {
+		if val, err := c.fileValues.String(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.String(jsonPath...)
+		return c.defaults.MustString(jsonPath...)
 	}
 }
 
 func (c *config) GetStringSlice(path string) []string {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).StringSlice()
+		return json.MustFromString(envVal).MustStringSlice()
 	} else {
-		if val, err := c.fileValues.Json.StringSlice(jsonPath...); err == nil {
+		if val, err := c.fileValues.StringSlice(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.StringSlice(jsonPath...)
+		return c.defaults.MustStringSlice(jsonPath...)
 	}
 }
 
 func (c *config) GetMap(path string) map[string]interface{} {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).Map()
+		return json.MustFromString(envVal).MustMap()
 	} else {
-		if val, err := c.fileValues.Json.Map(jsonPath...); err == nil {
+		if val, err := c.fileValues.Map(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.Map(jsonPath...)
+		return c.defaults.MustMap(jsonPath...)
 	}
 }
 
 func (c *config) GetStringMap(path string) map[string]string {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).MapString()
+		return json.MustFromString(envVal).MustMapString()
 	} else {
-		if val, err := c.fileValues.Json.MapString(jsonPath...); err == nil {
+		if val, err := c.fileValues.MapString(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.MapString(jsonPath...)
+		return c.defaults.MustMapString(jsonPath...)
 	}
 }
 
 func (c *config) GetInt(path string) int {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).Int()
+		return json.MustFromString(envVal).MustInt()
 	} else {
-		if val, err := c.fileValues.Json.Int(jsonPath...); err == nil {
+		if val, err := c.fileValues.Int(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.Int(jsonPath...)
+		return c.defaults.MustInt(jsonPath...)
 	}
 }
 
 func (c *config) GetInt64(path string) int64 {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).Int64()
+		return json.MustFromString(envVal).MustInt64()
 	} else {
-		if val, err := c.fileValues.Json.Int64(jsonPath...); err == nil {
+		if val, err := c.fileValues.Int64(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.Int64(jsonPath...)
+		return c.defaults.MustInt64(jsonPath...)
 	}
 }
 
 func (c *config) GetBool(path string) bool {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).Bool()
+		return json.MustFromString(envVal).MustBool()
 	} else {
-		if val, err := c.fileValues.Json.Bool(jsonPath...); err == nil {
+		if val, err := c.fileValues.Bool(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.Bool(jsonPath...)
+		return c.defaults.MustBool(jsonPath...)
 	}
 }
 
 func (c *config) GetTime(path string) time.Time {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).Time()
+		return json.MustFromString(envVal).MustTime()
 	} else {
-		if val, err := c.fileValues.Json.Time(jsonPath...); err == nil {
+		if val, err := c.fileValues.Time(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.Time(jsonPath...)
+		return c.defaults.MustTime(jsonPath...)
 	}
 }
 
 func (c *config) GetDuration(path string) time.Duration {
 	if jsonPath, envVal, envValExists := makeJsonPathAndGetEnvValAndExists(path, c.envVarsStringSeparator); envValExists {
-		return json.PFromString(envVal).Duration()
+		return json.MustFromString(envVal).MustDuration()
 	} else {
-		if val, err := c.fileValues.Json.Duration(jsonPath...); err == nil {
+		if val, err := c.fileValues.Duration(jsonPath...); err == nil {
 			return val
 		}
-		return c.defaults.Duration(jsonPath...)
+		return c.defaults.MustDuration(jsonPath...)
 	}
 }
 
